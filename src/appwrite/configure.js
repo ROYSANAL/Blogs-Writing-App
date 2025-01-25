@@ -1,4 +1,3 @@
-import { Await } from "react-router-dom";
 import config from "../config/config";
 import { Client, ID, Databases, Storage, Query } from "appwrite";
 
@@ -34,20 +33,25 @@ export class DatabaseStorageService {
       throw error;
     }
   }
+
   async updatePost(slug, { title, content, featuredImage, status }) {
     try {
       return await this.databases.updateDocument(
-        config.appwriteProjectId,
         config.appwriteDatabaseId,
+        config.appwriteCollectionId,
         slug,
-        { title, content, featuredImage, status }
+        {
+          title,
+          content,
+          featuredImage,
+          status,
+        }
       );
     } catch (error) {
-      console.log("Appwrite Update Database error : ", error);
-      throw error;
+      console.log("Appwrite serive :: updatePost :: error", error);
     }
   }
-  async daletePost(slug) {
+  async deletePost(slug) {
     try {
       await this.databases.deleteDocument(
         config.appwriteDatabaseId,
@@ -86,7 +90,7 @@ export class DatabaseStorageService {
     try {
       return await this.bucket.createFile(
         config.appwriteBucketId,
-        ID.unique,
+        ID.unique(),
         file
       );
     } catch (error) {
